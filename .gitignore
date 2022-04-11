@@ -1,2 +1,3 @@
 /data/devices_files
-.json
+*.json
+.idea
