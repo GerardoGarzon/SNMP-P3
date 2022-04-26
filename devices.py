@@ -1,7 +1,7 @@
 from termcolor import colored, cprint
 from snmp_requests import *
 from database import DataBase
-from agent import *
+from agent import start_agent
 import os
 import threading
 
@@ -66,6 +66,3 @@ class Devices:
         os.system('rm -r data/devices_files/' + ip_address)
         print(colored('\nDispositivo eliminado exitosamente.', 'green'))
 
-# CPU usage:
-# RAM usage:
-# HDD usage:

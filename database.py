@@ -1,17 +1,16 @@
 import json
+from os.path import exists
 
 
 class DataBase:
-    database_name = "/data/database.json"
+    database_name = "data/database.json"
 
     ####################################################################################################################
     # Initialize the database using json file
     # if the file does not exist it will create with an empty object
     ####################################################################################################################
     def __init__(self):
-        try:
-            open(self.database_name, "r")
-        except:
+        if not exists(self.database_name):
             with open(self.database_name, "x") as f:
                 json.dump({}, f)
 
@@ -57,9 +56,3 @@ class DataBase:
         with open(self.database_name, "w") as f:
             json.dump(data, f)
 
-# my_data = DataBase()
-# my_data.insert('algo', '192.168.1.216', '3', 'GerardoComunidad', '8888')
-# my_data.insert('algo', '192.168.1.234', '3', 'GerardoComunidad', '8888')
-# print(json.dumps(my_data.read(), indent=4, sort_keys=True))
-# my_data.delete('192.168.1.216')
-# print(json.dumps(my_data.read(), indent=4, sort_keys=True))

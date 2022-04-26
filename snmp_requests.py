@@ -2,6 +2,7 @@ from pysnmp.hlapi import *
 
 
 def snmp_get(community, host, oid):
+    result = ""
     errorIndication, errorStatus, errorIndex, varBinds = next(
         getCmd(SnmpEngine(),
                CommunityData(community),
@@ -17,7 +18,6 @@ def snmp_get(community, host, oid):
         for varBind in varBinds:
             varB = (' = '.join([x.prettyPrint() for x in varBind]))
             result = varB.split()[2]
-
     return result
 
 
@@ -44,11 +44,4 @@ def snmp_walk(community, host, oid):
             for varBind in varBinds:
                 varB = (' = '.join([x.prettyPrint() for x in varBind]))
                 result.append(varB)
-                # resultado = varB.split()[0]
-                # resultado = resultado.split('.')
-                # print(resultado[len(resultado) - 1])
     return result
-
-
-print(snmp_walk('GerardoComunidad', 'localhost', '1.3.6.1.2.1.25.3.3.1.1'))
-
