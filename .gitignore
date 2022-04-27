@@ -1,3 +1,4 @@
-data
+data/devices_files
+data/database.json
 .idea
 venv

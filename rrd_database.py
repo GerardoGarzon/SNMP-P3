@@ -2,6 +2,10 @@ import rrdtool
 import csv
 import os
 
+cpu_limit = [50, 75, 90]
+ram_limit = [60, 80, 90]
+hdd_limit = [70, 80, 90]
+
 
 def create_database(ip_address, type_data):
     database_dir = os.getcwd() + "/data/devices_files/" + ip_address
