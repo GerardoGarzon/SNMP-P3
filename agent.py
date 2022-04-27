@@ -27,18 +27,37 @@ def start_agent(host_name, ip_address, community, port):
 
 
 def update_agent(ip_address, community, ram_id, ram_units, hdd_id, hdd_units):
-    last_cpu_notification = [0, 0, 0]
-    last_ram_notification = [0, 0, 0]
-    last_hdd_notification = [0, 0, 0]
+    rand_date = datetime.strptime("14/08/1998 12:00:00", "%d/%m/%Y %H:%M:%S")
+    last_cpu_notification = [rand_date, rand_date, rand_date]
+    last_ram_notification = [rand_date, rand_date, rand_date]
+    last_hdd_notification = [rand_date, rand_date, rand_date]
 
     while exists(os.getcwd() + "/data/devices_files/" + ip_address):
         value_cpu = get_cpu_value(community, ip_address)
         value_ram = get_memory_value(community, ip_address, ram_id, ram_units)
         value_hdd = get_memory_value(community, ip_address, hdd_id, hdd_units)
 
-        update_database(ip_address, 'CPU', value_cpu, "100", last_cpu_notification)
-        update_database(ip_address, 'RAM', "N:" + str(value_ram["usage_storage"]) + ":" + str(value_ram["total_storage"]), str(value_ram["total_storage"]), last_ram_notification)
-        update_database(ip_address, 'HDD', "N:" + str(value_hdd["usage_storage"]) + ":" + str(value_hdd["total_storage"]), str(value_hdd["total_storage"]), last_hdd_notification)
+        last_cpu_notification = update_database(
+            ip_address,
+            'CPU',
+            value_cpu,
+            "100",
+            last_cpu_notification
+        )
+        last_ram_notification = update_database(
+            ip_address,
+            'RAM',
+            "N:" + str(value_ram["usage_storage"]) + ":" + str(value_ram["total_storage"]),
+            str(value_ram["total_storage"]),
+            last_ram_notification
+        )
+        last_hdd_notification = update_database(
+            ip_address,
+            'HDD',
+            "N:" + str(value_hdd["usage_storage"]) + ":" + str(value_hdd["total_storage"]),
+            str(value_hdd["total_storage"]),
+            last_hdd_notification
+        )
         time.sleep(1)
 
 
