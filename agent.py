@@ -1,4 +1,5 @@
 import time
+import re
 from os.path import exists
 from rrd_database import *
 from snmp_requests import *
@@ -18,9 +19,9 @@ def start_agent(host_name, ip_address, community, port):
     create_database(ip_address, "HDD")
 
     ram_id = find_ram_id(ip_address, community)
-    ram_units = snmp_get(community, ip_address, '1.3.6.1.2.1.25.2.3.1.4.' + ram_id)
+    ram_units = snmp_get(community, ip_address, '1.3.6.1.2.1.25.2.3.1.4.' + str(ram_id))
     hdd_id = find_hdd_id(ip_address, community)
-    hdd_units = snmp_get(community, ip_address, '1.3.6.1.2.1.25.2.3.1.4.' + hdd_id)
+    hdd_units = snmp_get(community, ip_address, '1.3.6.1.2.1.25.2.3.1.4.' + str(hdd_id))
 
     update_agent(ip_address, community, ram_id, ram_units, hdd_id, hdd_units)
 
@@ -49,14 +50,14 @@ def find_ram_id(ip_address, community):
             oid_id = hrStorageType[i].split(' = ')[0].split('.')
             ram_id = oid_id[len(oid_id) - 1]
             break
-    return ram_id
+    return str(ram_id)
 
 
 def find_hdd_id(ip_address, community):
     hdd_id = 0
     hrStorageDesc = snmp_walk(community, ip_address, '1.3.6.1.2.1.25.2.3.1.3')
     for i in range(len(hrStorageDesc)):
-        if hrStorageDesc[i].split(' = ')[1] == "/":
+        if hrStorageDesc[i].split(' = ')[1] == "/" or re.match(r'(C:).*', hrStorageDesc[i].split(' = ')[1]):
             oid_id = hrStorageDesc[i].split(' = ')[0].split('.')
             hdd_id = oid_id[len(oid_id) - 1]
             break

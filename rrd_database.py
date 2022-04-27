@@ -1,4 +1,5 @@
 import rrdtool
+import csv
 import os
 
 
@@ -20,7 +21,13 @@ def create_database(ip_address, type_data):
 
 def update_database(ip_address, type_data, value, max_value):
     database_dir = os.getcwd() + "/data/devices_files/" + ip_address + "/" + type_data + ".rrd"
+    database_csv = os.getcwd() + "/data/devices_files/" + ip_address + "/" + type_data + ".csv"
+
     rrdtool.update(database_dir, value)
+    with open(database_csv, 'a', newline='') as f:
+        writer = csv.writer(f)
+        split_value = value.split(":")
+        writer.writerow([split_value[1], max_value])
     graph_detection(ip_address, type_data, max_value)
 
 
@@ -29,7 +36,7 @@ def graph_detection(ip_address, type_data, max_value):
     image_output = os.getcwd() + "/data/devices_files/" + ip_address + "/"
 
     last_update = int(rrdtool.last(database_dir))
-    start_time = last_update - 200
+    start_time = last_update - 3000
 
     ret = rrdtool.graphv(str(image_output) + "detection" + type_data + ".png",
                          "--start", str(start_time),
